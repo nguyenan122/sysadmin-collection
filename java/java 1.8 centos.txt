@@ -1,0 +1,65 @@
+http://www.techoism.com/install-java-8-on-centosrhel-65/
+>>>Download jdk not jre<<<<
+
+tar -xvzf jdk-8u271-linux-x64.tar.gz
+chown -R root.root jdk1.8.0_291
+mv jdk1.8.0_291 /opt/
+
+alternatives --install /usr/bin/java java /opt/jdk1.8.0_291/bin/java 2
+alternatives --config java
+alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_291/bin/jar 2
+alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_291/bin/javac 2
+alternatives --install /usr/bin/javaws javaws /opt/jdk1.8.0_291/bin/javaws  2
+alternatives --set jar /opt/jdk1.8.0_291/bin/jar
+alternatives --set javac /opt/jdk1.8.0_291/bin/javac
+alternatives --set javaws /opt/jdk1.8.0_291/bin/javaws
+java -version
+=================
+Some application’s are Java base. So follow below steps to set Java environment.
+
+export JAVA_HOME=/opt/jdk1.8.0_291
+export JRE_HOME=/opt/jdk1.8.0_291/jre
+export PATH=$PATH:/opt/jdk1.8.0_291/bin:/opt/jdk1.8.0_291/jre/bin
+
+
+
+---- Fix loi
+javaws can cai libX11 : rpm -qa | grep libX11 ; yum install libX11 -y
+
+---- Fix loi 2: 
+https://johnglotzer.blogspot.com/2712/09/alternatives-install-gets-stuck-failed.html
+# alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.7.0_07/jre/bin/javaws  20000
+failed to read link /usr/bin/javaws: No such file or directory
+
+# ls /usr/bin/javaws
+ls: cannot access /usr/bin/javaws: No such file or directory
+
+
+# ls -al /var/lib/alternatives/javaws
+-rw-r--r--. 1 root root 105 Sep 22 11:39 /var/lib/alternatives/javaws
+
+# rm /var/lib/alternatives/javaws
+rm /var/lib/alternatives/javaws
+rm: remove regular file `/var/lib/alternatives/javaws'? y
+
+# alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.7.0_07/jre/bin/javaws  20000
+
+# which javaws
+/bin/javaws
+
+# ls /usr/bin/javaws
+/usr/bin/javaws
+
+
+# ls -al /var/lib/alternatives/javaws
+-rw-r--r--. 1 root root 65 Sep 22 11:50 /var/lib/alternatives/javaws
+
+# cat /var/lib/alternatives/javaws
+auto
+/usr/bin/javaws
+
+/usr/java/jdk1.7.0_07/jre/bin/javaws
+20000
+
+
+

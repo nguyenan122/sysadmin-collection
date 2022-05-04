@@ -1,0 +1,10 @@
+https://stackoverflow.com/questions/9619030/resolving-javax-net-ssl-sslhandshakeexception-sun-security-validator-validatore
+
+keytool sẽ nằm ở thư mục bin của java. Nếu version mới nhất của java vẫn lỗi (thư viện ssl mới nhất). thì cần phải import thêm.
+
+1. Vào %JAVA_HOME%\lib\security\cacerts. ta có thể check đc toàn bộ publc key đang được add: 
+keytool -list -keystore "%JAVA_HOME%/jre/lib/security/cacerts"
+
+2. Nếu thiếu ssl ta có thể add như sau:
+Import với SSL của nginx/apache X.509
+keytool -import -trustcacerts -keystore cacerts -storepass changeit -noprompt -alias tuanda.com -file path\to\certificate.cert

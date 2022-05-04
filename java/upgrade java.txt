@@ -1,0 +1,20 @@
+https://askubuntu.com/questions/863787/how-to-upgrade-java-on-ubuntu-16-04-lts?rq=1
+
+Remove/uninstall jdk-8u111
+Download 8u112 binary from here http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+Uncompress, move to /usr/java
+
+sudo tar xvzf jdk-8u112-linux-i586.tar.gz -C /usr/java
+Now to set your JAVA_HOME environment variable:
+
+
+$JAVA_HOME=/usr/java/jdk1.8.0_05/
+$sudo update-alternatives --install /usr/bin/java java ${JAVA_HOME%*/}/bin/java 20000
+$sudo update-alternatives --install /usr/bin/javac javac ${JAVA_HOME%*/}/bin/javac 20000
+
+Make sure the Oracle's java is set as default java by:
+
+update-alternatives --config java
+Confirm your recent java version
+
+$java -version
