@@ -1,0 +1,211 @@
+﻿mkdir -p /opt/nginx
+mkdir /opt/nginx/logs/
+mkdir /run
+
+Centos: yum install pcre pcre-devel zlib zlib-devel openssl openssl-devel gcc -y
+Ubuntu: apt-get install libpcre3 libpcre3-dev zlib1g zlib1g-dev libssl-dev openssl
+
+
+(Hoac:
+OPT: ./configure  --sbin-path=/usr/bin/nginx --prefix=/opt/nginx --conf-path=/opt/nginx/nginx.conf --error-log-path=/opt/nginx/logs/error.log --http-log-path=/opt/nginx/logs/access.log --with-pcre --pid-path=/var/run/nginx.pid --with-http_ssl_module --with-http_realip_module
+ETC: ./configure  --sbin-path=/usr/bin/nginx --prefix=/etc/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-pcre --pid-path=/var/run/nginx.pid --with-http_ssl_module --with-http_realip_module
+     ./configure  --sbin-path=/usr/bin/nginx --prefix=/opt/nginx --conf-path=/opt/nginx/nginx.conf --error-log-path=/opt/nginx/logs/error.log --http-log-path=/opt/nginx/logs/access.log --with-pcre --pid-path=/var/run/nginx.pid --with-http_ssl_module --with-http_realip_module --with-http_stub_status_module --with-http_geoip_module
+Một số module nếu cầu thêm
+--with-http_stub_status_module
+# GeoIP1 da cu . khogn dung--with-http_geoip_module  (yum install geoip-devel / apt-get install libgeoip-dev)
+
+
+BASIC: ./configure --prefix=/opt/nginx  --with-http_ssl_module
+http://nginx.org/en/docs/configure.html
+make
+make install
+ln -s /opt/nginx/sbin/nginx /sbin/nginx
+
+server {
+        server_name _;
+        client_max_body_size 20M;
+        listen 443;
+        ssl on;
+        #ssl_session_timeout 5m;
+        #ssl_protocols SSLv2 SSLv3 TLSv1;
+        ssl_certificate /opt/cert/ca.crt;
+        ssl_certificate_key /opt/cert/ca.key ;
+        ssl_session_cache shared:SSL:10m;
+        root /opt/nginx/html;
+}
+
+
+
+
+
+NGINX INIT.D
+
+
+
+
+#!/bin/sh
+#
+# nginx - this script starts and stops the nginx daemon
+#
+# chkconfig:   - 85 15 
+# description:  Nginx is an HTTP(S) server, HTTP(S) reverse \
+#               proxy and IMAP/POP3 proxy server
+# processname: nginx
+# config:      /etc/nginx/nginx.conf
+# config:      /etc/sysconfig/nginx
+# pidfile:     /var/run/nginx.pid
+ 
+# Source function library.
+. /etc/rc.d/init.d/functions
+ 
+# Source networking configuration.
+. /etc/sysconfig/network
+ 
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+ 
+nginx="/opt/nginx/sbin/nginx"
+prog=$(basename $nginx)
+ 
+NGINX_CONF_FILE="/opt/nginx/conf/nginx.conf"
+ 
+[ -f /etc/sysconfig/nginx ] && . /etc/sysconfig/nginx
+ 
+lockfile=/var/lock/subsys/nginx
+ 
+make_dirs() {
+   # make required directories
+   user=`$nginx -V 2>&1 | grep "configure arguments:" | sed 's/[^*]*--user=\([^ ]*\).*/\1/g' -`
+   if [ -z "`grep $user /etc/passwd`" ]; then
+       useradd -M -s /bin/nologin $user
+   fi
+   options=`$nginx -V 2>&1 | grep 'configure arguments:'`
+   for opt in $options; do
+       if [ `echo $opt | grep '.*-temp-path'` ]; then
+           value=`echo $opt | cut -d "=" -f 2`
+           if [ ! -d "$value" ]; then
+               # echo "creating" $value
+               mkdir -p $value && chown -R $user $value
+           fi
+       fi
+   done
+}
+ 
+start() {
+    [ -x $nginx ] || exit 5
+    [ -f $NGINX_CONF_FILE ] || exit 6
+#    make_dirs
+    echo -n $"Starting $prog: "
+    daemon $nginx -c $NGINX_CONF_FILE
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+ 
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog -QUIT
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+ 
+restart() {
+    configtest || return $?
+    stop
+    sleep 1
+    start
+}
+ 
+reload() {
+    configtest || return $?
+    echo -n $"Reloading $prog: "
+    killproc $nginx -HUP
+    RETVAL=$?
+    echo
+}
+ 
+force_reload() {
+    restart
+}
+ 
+configtest() {
+  $nginx -t -c $NGINX_CONF_FILE
+}
+ 
+rh_status() {
+    status $prog
+}
+ 
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+ 
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart|configtest)
+        $1
+        ;;
+    reload)
+        rh_status_q || exit 7
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+            ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}"
+        exit 2
+esac
+
+
+
+==== Systemd - CTL centos7 
+#vim /lib/systemd/system/nginx.service
+[Unit]
+Description=The NGINX HTTP and reverse proxy server
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/usr/bin/nginx -t
+ExecStart=/usr/bin/nginx
+ExecReload=/usr/bin/nginx -s reload
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+
+======================================================= LOG BODY
+
+Một số option thêm:
+Log thêm cả post body. Nhưng cần phải thêm openfile cho user nginx
+
+log_format apilog '$remote_addr - $remote_user [$time_local] '
+    '"$request" $status $body_bytes_sent '
+    '"$http_referer" "$http_user_agent" $request_time req_body:"$request_body"';
+
+
+server_tokens off;
+
+
+thêm timeout upload file
+client_max_body_size 10M;
