@@ -1,0 +1,74 @@
+key > csr (gui cho thawte) > (key+csr) --- crt > 
+
+Bước 1 Tạo PrivateKey: 
+# openssl genrsa -des3 -out ca.key 2048  (create key with pass, co the chon 4096)
+ 
+Bước 2: Tạo CSR 
+ [  openssl req -new -key ca.key -out ca.csr  (SHA1) 
+    openssl req -new -sha256 -key ca.key -out ca.csr (SHA256)   ] ---------------- check csr information :    openssl req -in ca.csr  -noout -text
+
+Country Name (2 letter code) [GB]:BZ
+State or Province Name (full name) [Berkshire]:Belize City
+Locality Name (eg, city) [Newbury]:Belize City
+Organization Name (eg, company) [My Company Ltd]:NATURE FOREX Ltd
+Organizational Unit Name (eg, section) []:IT Department
+Common Name (eg, your name or your server's hostname) []:dladmin.xxxxxxxxxxx.com
+Email Address []:info@xxxxxxxxxxx.com
+api.telegram.org
+
+Bước 3: Tạo Self CRT
+openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt     ]---------------------- check crt : openssl x509 -in ca.crt -text -noout
+(convert crt to pem)
+
+(lenh khac. neu ko gen ra 256 : openssl x509 -req -sha256 -days 365 -in public.csr -signkey private.key -out public.crt)
+openssl x509 -in mycert.crt -out mycert.pem -outform PEM
+
+openssl req -new -x509 -days 365 -key ca.key -out ca.cer
+openssl dsaparam -out dsaparam.pem 2048
+
+
+remove ca password file
+openssl rsa -in ca.key -out ca_nopass.key
+
+GET public ca.crt
+openssl s_client -showcerts -connect tuan.framgia.vn:443
+
+-------------------------------------------------------------------------------
+export P12 format
+
+openssl pkcs12 -inkey ca.key -in ca.crt -export -out server.pkcs12
+
+
+export JCEKS format
+
+keytool -importkeystore -srckeystore server.pkcs12 -destkeystore server.jceks -srcstoretype pkcs12 -deststoretype JCEKS
+
+
+export JKS format
+keytool -importkeystore -srckeystore server.pkcs12 -destkeystore server.jks -srcstoretype pkcs12 -deststoretype JKS
+
+keytool -importkeystore -srckeystore server.pkcs12 -srcstoretype pkcs12 -alias 1 -destkeystore x.jks -deststoretype jks -destalias bo.xxxxxxxxxxx.com
+--------------------------------------------------------------------------------------
+
+From PKCS12 to pem
+openssl pkcs12 -in server.pkcs12 -out server.pem
+
+Pem no pass
+openssl pkcs12 -in server.pkcs12 -out server2.pem -nodes
+
+
+export client key
+openssl pkcs12 -export -clcerts -in ca.crt -inkey ca.key -out client.p12 -name "Dealing custommer"
+
+
+NGON- TUAN TEST THU
+keytool -import -trustcacerts -keystore  cacerts -storepass changeit -noprompt -alias mycert -file /tmp/tuan/STAR_xxxxxxxxxxx_com.crt
+keytool -import -trustcacerts -keystore  cacerts -storepass changeit -noprompt -file /tmp/tuan/STAR_xxxxxxxxxxx_com.crt 
+keytool -import -trustcacerts -keystore  cacerts -noprompt -file /tmp/tuan/STAR_xxxxxxxxxxx_com.crt 
+keytool -import -alias mycert -keystore /opt/jdk1.6/jre/lib/security/cacerts -file /home/gugrim/tmp/sunas.der
+
+===================Tuanduong them nay 20190703============= Keystore file JKS > PKCS12 (P12)
+------- convert .jks keystore file>>> pkcs12 (.p12) (https://knowledge.digicert.com/solution/SO17389.html)
+B1 Convert: keytool -importkeystore -srckeystore [MY_KEYSTORE.jks] -destkeystore [MY_FILE.p12] -srcstoretype JKS -deststoretype PKCS12 -deststorepass [PASSWORD_PKCS12]
+B2 Check: keytool -list -v -keystore MY_FILE.p12 -storetype pkcs12
+Rồi từ P12 ta có thể convert về PEM theo bước phía trên
