@@ -1,7 +1,7 @@
 Mục Lục
 
-[Phần 1: Cài đặt Prometheus](https://github.com/nguyenan122/sysadmin-collection/edit/main/prometheus/README.md#phan-1-cai-dat-prometheus)
-
+[Phần 1: Cài đặt Prometheus](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#phan-1-cai-dat-prometheus)
+[Phần2: (Tùy chọn) SSL và Authen cho Prometheus + Node_Exporter](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#ph%E1%BA%A7n-2-c%C3%A0i-%C4%91%E1%BA%B7t-node_exporter)
 
 # Phan 1: Cai dat Prometheus
 ```
@@ -99,7 +99,6 @@ systemctl start node_exporter
 
 
 # Phan2: (Option) SSL and Authen Prometheus + Node_Exporter
-
 
 
 **B1: Tạo mật khẩu authen và ssl**
