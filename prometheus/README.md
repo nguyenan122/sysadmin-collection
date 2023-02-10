@@ -2,7 +2,9 @@ Mục Lục
 
 > [Phần 1: Cài đặt Prometheus](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#phan-1-cai-dat-prometheus)
 
-> [Phần2: (Tùy chọn) SSL và Authen cho Prometheus + Node_Exporter](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#phan2-option-ssl-and-authen-prometheus--node_exporter)
+> [Phần 2: Cài đặt Node_Exporter](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#phan-2-cai-dat-node-exporter)
+
+> [Phần3: (Tùy chọn) SSL và Authen cho Prometheus + Node_Exporter](https://github.com/nguyenan122/sysadmin-collection/blob/main/prometheus/README.md#phan3-option-ssl-and-authen-prometheus--node_exporter)
 
 
 
@@ -66,7 +68,7 @@ systemctl start prometheus
 ```
 
 
-# Phần 2: Cài đặt Node_Exporter
+# Phan 2: Cai dat Node Exporter
 ```
 wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
 tar -xvzf node_exporter-1.5.0.linux-amd64.tar.gz
@@ -101,7 +103,7 @@ systemctl start node_exporter
 ```
 
 
-# Phan2: (Option) SSL and Authen Prometheus + Node_Exporter
+# Phan3: (Option) SSL and Authen Prometheus + Node_Exporter
 
 
 **B1: Tạo mật khẩu authen và ssl**
