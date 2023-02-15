@@ -147,3 +147,37 @@ scrape_configs:
 # systemctl restart prometheus
 ```
 
+
+# Phan8: Pushgateway
+**B1: Cài đặt**
+```
+wget https://github.com/prometheus/pushgateway/releases/download/v1.5.1/pushgateway-1.5.1.linux-amd64.tar.gz
+tar -xvzf pushgateway-1.5.1.linux-amd64.tar.gz
+cd pushgateway-1.5.1.linux-amd64
+useradd --no-create-home --shell /bin/false pushgateway
+cp pushgateway /usr/local/bin/
+chown pushgateway:pushgateway /usr/local/bin/pushgateway
+```
+**B2: Tạo systemd file**
+```
+vim /etc/systemd/system/pushgateway.service
+[Unit]
+Description=Prometheus Pushgateway 
+Wants=network-online.target 
+After=network-online.target
+
+[Service] 
+User=pushgateway 
+Group=pushgateway 
+Type=simple
+ExecStart=/usr/local/bin/pushgateway
+
+[Install]
+WantedBy=multi-user.target
+```
+**B3: Start pushgateway**
+```
+systemctl daemon-reload
+systemctl restart pushgateway
+systemctl enable pushgateway
+```
