@@ -251,3 +251,61 @@ DELETE: xóa toàn bộ hoặc 1 phần nhỏ
 curl –X DELETE http://localhost:9091/metrics/job/archive/app/web
 kết quả toàn bộ /app/web đều bị xóa hết metrics
 ```
+
+
+
+# Phan10: AlertManager
+**B1: Cài đặt**
+```
+wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
+tar -xvzf alertmanager-0.25.0.linux-amd64.tar.gz
+cd cd alertmanager-0.25.0.linux-amd64
+useradd --no-create-home --shell /bin/false alertmanager
+mkdir /etc/alertmanager
+mv alertmanager.yml /etc/alertmanager
+chown -R alertmanager:alertmanager /etc/alertmanager
+mkdir /var/lib/alertmanager
+chown -R alertmanager:alertmanager /var/lib/alertmanager
+cp alertmanager /usr/local/bin/
+cp amtool /usr/local/bin/
+chown alertmanager:alertmanager /usr/local/bin/alertmanager
+chown alertmanager:alertmanager /usr/local/bin/amtool
+
+```
+B2: Sửa systemd file
+```
+vi /etc/systemd/system/alertmanager.service
+[Unit]
+Description=Alert Manager 
+Wants=networkonline.target 
+After=networkonline.target
+
+[Service]
+Type=simple 
+User=alertmanager 
+Group=alertmanager
+ExecStart=/usr/local/bin/alertmanager \
+          --config.file=/etc/alertmanager/alertmanager.yml \
+          --storage.path=/var/lib/alertmanager 
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Khởi động Alertmanager lên và truy cập port 9093
+systemctl daemon-reload
+systemctl start alertmanager
+systemctl enable alertmanager
+```
+
+
+**B3: Sửa config prometheus**
+```
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 192.168.88.111:9093
+            - alertmanager2:9093
+```
