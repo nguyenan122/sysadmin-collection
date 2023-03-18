@@ -2,7 +2,7 @@
 
 ### 6.1 Đọc hiểu metric
 
-![iamge1](/sysadmin-collection/prometheus/06.PromQL/images/01.metric-type.JPG)
+![iamge1](/prometheus/06.PromQL/images/01.metric-type.JPG)
 
 
 Các loại metric:
