@@ -1,4 +1,4 @@
-# Phần 10: AlertManager
+# Phần 4: AlertManager
 
 ## 10.1 Rules (tạo recording rule và alerting rule)
 Rule có chức năng định nghĩa khi nào cảnh báo. Sau đó Alertmanager sẽ lấy rule này và đem bắn cảnh báo lên mail/chat.
