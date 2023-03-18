@@ -1,5 +1,5 @@
-# Phan10: AlertManager
-**B1: Cài đặt**
+# Phần 10: AlertManager
+**Bước 1: Cài đặt**
 ```
 useradd --no-create-home --shell /bin/false alertmanager
 wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
@@ -15,7 +15,7 @@ cp alertmanager /usr/local/bin/
 cp amtool /usr/local/bin/
 ```
 
-**B2: Sửa systemd file**
+**Bước 2: Sửa systemd file**
 ```
 vi /etc/systemd/system/alertmanager.service
 [Unit]
@@ -42,7 +42,7 @@ systemctl enable alertmanager
 ```
 
 
-**B3: Sửa config prometheus**
+**Bước 3: Sửa config prometheus**
 ```
 # Alertmanager configuration
 alerting:
@@ -53,4 +53,4 @@ alerting:
             - alertmanager2:9093
 ```
 
-**B4: Cấu hình Alertmanager**
+**Bước 4: Cấu hình Alertmanager**

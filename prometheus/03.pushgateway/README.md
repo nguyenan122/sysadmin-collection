@@ -1,5 +1,7 @@
-# Phan8: Pushgateway
-**B1: Cài đặt**
+# Phần 8: Cài đặt Pushgateway và đẩy Metric lên PushGateway
+
+## 8.1 Cài đặt
+**Bước 1: Cài đặt**
 ```
 wget https://github.com/prometheus/pushgateway/releases/download/v1.5.1/pushgateway-1.5.1.linux-amd64.tar.gz
 tar -xvzf pushgateway-1.5.1.linux-amd64.tar.gz
@@ -8,7 +10,7 @@ useradd --no-create-home --shell /bin/false pushgateway
 cp pushgateway /usr/local/bin/
 chown pushgateway:pushgateway /usr/local/bin/pushgateway
 ```
-**B2: Tạo systemd file**
+**Bước 2: Tạo systemd file**
 ```
 vim /etc/systemd/system/pushgateway.service
 [Unit]
@@ -25,13 +27,13 @@ ExecStart=/usr/local/bin/pushgateway
 [Install]
 WantedBy=multi-user.target
 ```
-**B3: Start pushgateway**
+**Bước 3: Start pushgateway**
 ```
 systemctl daemon-reload
 systemctl restart pushgateway
 systemctl enable pushgateway
 ```
-**B4: Cấu hình prometheus.yml lấy data from pushgatway**
+**Bước 4: Cấu hình prometheus.yml lấy data from pushgatway**
 ```
 scrape_configs:
   - job_name: pushgateway
@@ -41,7 +43,7 @@ scrape_configs:
 ```
 
 
-**B5: Push data into gateway**
+**Bước 5: Push data into gateway**
 ```
 VD1: Basic
 echo "metric1_name 123456" | curl --data-binary @- http://<pushgateway_address>:<port>/metrics/job/<job_name>/<label1>/<value1>/<label2>/<value2>
@@ -56,6 +58,7 @@ another_metric 12
 EOF
 ```
 
+## 8.2 Hướng dẫn gửi metric lên PushGateway
 **Group data gửi sang pushgateway- dựa theo uri**
 ```
 $ cat <<EOF | curl --data-binary @- http://localhost:9091/metrics/job/archive/db/mysql
