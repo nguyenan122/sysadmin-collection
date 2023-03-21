@@ -10,6 +10,7 @@ useradd --no-create-home --shell /bin/false node_exporter
 chown node_exporter:node_exporter /usr/local/bin/node_exporter
 ```
 **Bước 2: Chuẩn bị Systemd file**
+
 vi /etc/systemd/system/node_exporter.service
 ```
 [Unit]
