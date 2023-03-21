@@ -30,7 +30,14 @@ ExecStart=/usr/local/bin/node_exporter
 [Install]
 WantedBy=multi-user.target
 ```
-**Bước 3: thêm prometheus config**
+**Bước 3: Start NodeExporter**
+```
+systemctl daemon-reload
+systemctl start node_exporter
+Ta có thể kiểm tra node_exporter chạy bằng vào url: http://192.168.88.12:9100/metrics
+```
+
+**Bước 4: thêm prometheus lấy dữ liệu từ NodeExporter vừa cài**
 ```
 # vim /etc/prometheus/prometheus.yml  
 scrape_configs:
@@ -49,14 +56,6 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets: ["192.168.88.13:9100"]      
-```
-
-
-
-**Bước 4: Start NodeExporter**
-```
-systemctl daemon-reload
-systemctl start node_exporter
 ```
 
 
