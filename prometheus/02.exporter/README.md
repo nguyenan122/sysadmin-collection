@@ -34,8 +34,10 @@ WantedBy=multi-user.target
 ```
 systemctl daemon-reload
 systemctl start node_exporter
-Ta có thể kiểm tra node_exporter chạy bằng vào url: http://192.168.88.12:9100/metrics
 ```
+Ta có thể kiểm tra node_exporter chạy bằng vào url: http://192.168.88.13:9100/metrics
+![exporter01](/prometheus/02.exporter/images/01.exporter-metrics.PNG)
+
 
 **Bước 4: thêm prometheus lấy dữ liệu từ NodeExporter vừa cài**
 ```
@@ -43,21 +45,14 @@ Ta có thể kiểm tra node_exporter chạy bằng vào url: http://192.168.88.
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets: ["192.168.88.111:9090"]
-  - job_name: "node1"
-    scheme: http
-    static_configs:
-      - targets: ["192.168.88.111:9100"]
-  - job_name: "master-node"
-    scheme: http
-    static_configs:
-      - targets: ["192.168.88.12:9100"]
+      - targets: ["192.168.88.12:9090"]
   - job_name: "worker-node1"
     scheme: http
     static_configs:
       - targets: ["192.168.88.13:9100"]      
 ```
-
+Thực hiện reload config Prometheus bằng curl -XPOST http://192.168.88.12:9090/-/reload và vào web kiểm tra
+![exporter01](/prometheus/02.exporter/images/02.prometheus-exporter.PNG)
 
 # Phần 2.1: (Tùy chọn thêm) Bật SSL và Authen cho Node_Exporter
 
