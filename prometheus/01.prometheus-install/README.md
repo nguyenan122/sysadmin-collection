@@ -59,3 +59,10 @@ systemctl daemon-reload
 systemctl start prometheus
 ```
 
+**Bonus**
+
+Để reload nhanh Prometheus, ta có thể bật option --web.enable-lifecycle và chạy lệnh curl
+```
+curl -XPOST http://ip-của-prometheus:9090/-/reload 
+```
+
