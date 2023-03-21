@@ -30,7 +30,30 @@ ExecStart=/usr/local/bin/node_exporter
 [Install]
 WantedBy=multi-user.target
 ```
-**Bước 3: Start NodeExporter**
+**Bước 3: thêm prometheus config**
+```
+# vim /etc/prometheus/prometheus.yml  
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["192.168.88.111:9090"]
+  - job_name: "node1"
+    scheme: http
+    static_configs:
+      - targets: ["192.168.88.111:9100"]
+  - job_name: "master-node"
+    scheme: http
+    static_configs:
+      - targets: ["192.168.88.12:9100"]
+  - job_name: "worker-node1"
+    scheme: http
+    static_configs:
+      - targets: ["192.168.88.13:9100"]      
+```
+
+
+
+**Bước 4: Start NodeExporter**
 ```
 systemctl daemon-reload
 systemctl start node_exporter
