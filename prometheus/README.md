@@ -14,7 +14,7 @@ Mục Lục
 
 > [Phần 6: PromQL](https://github.com/nguyenan122/sysadmin-collection/tree/main/prometheus/06.PromQL)
 
-> [Phần 7: PromQL](https://github.com/nguyenan122/sysadmin-collection/tree/main/prometheus/06.PromQL)
+> [Phần 7: Prometheus advanced](https://github.com/nguyenan122/sysadmin-collection/tree/main/prometheus/07.prometheus-advanced)
 
 > [Phần 8: Cài đặt giám sát trong kubernetes](https://github.com/nguyenan122/sysadmin-collection/tree/main/prometheus/06.PromQL)
 

@@ -14,6 +14,7 @@ rule_files:
 **Bước 2:** Khai báo rules
 
 mkdir /etc/prometheus/rules/
+
 vim /etc/prometheus/rules/first_rules.yml
 ```
 groups:
@@ -42,7 +43,7 @@ groups:
         labels:
           severity: critical
 
-      #5 Sử dụng For để delay cảnh báo
+      #5 Sử dụng For để delay cảnh báo (Lệnh for có chức năng node down trong 5 phút thì mới bắn firring cảnh báo)
       - alert: Node down
         expr: up{job="worker-node1"} == 0
         for: 5m
@@ -62,7 +63,7 @@ groups:
           message: "node {{.Labels.instance}} is down"
 
       #7 Tạo 1 rule giả để test AlertManager
-      - alert: Node down TEST
+      - alert: 07-Node down TEST
         expr: up{job="worker-node1"} == 1
         labels:
           severity: test-only
